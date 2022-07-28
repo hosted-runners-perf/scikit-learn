@@ -9,7 +9,6 @@ jobs:
   check_build_trigger:
     name: Check build trigger
     runs-on: ubuntu-22.04
-    if: github.repository == 'scikit-learn/scikit-learn'
     outputs:
       build: ${{ steps.check_build_trigger.outputs.build }}
 
@@ -176,31 +175,3 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           path: dist/*.tar.gz
-
-  # Upload the wheels and the source distribution
-  upload_anaconda:
-    name: Upload to Anaconda
-    runs-on: ubuntu-22.04
-    needs: [build_wheels, build_sdist]
-    # The artifacts cannot be uploaded on PRs
-    if: github.event_name != 'pull_request'
-
-    steps:
-      - name: Checkout scikit-learn
-        uses: actions/checkout@v1
-
-      - name: Download artifacts
-        uses: actions/download-artifact@v2
-        with:
-          path: dist
-
-      - name: Setup Python
-        uses: actions/setup-python@v2
-
-      - name: Upload artifacts
-        env:
-          # Secret variables need to be mapped to environment variables explicitly
-          SCIKIT_LEARN_NIGHTLY_UPLOAD_TOKEN: ${{ secrets.SCIKIT_LEARN_NIGHTLY_UPLOAD_TOKEN }}
-          SCIKIT_LEARN_STAGING_UPLOAD_TOKEN: ${{ secrets.SCIKIT_LEARN_STAGING_UPLOAD_TOKEN }}
-        # Force a replacement if the remote file already exists
-        run: bash build_tools/github/upload_anaconda.sh
