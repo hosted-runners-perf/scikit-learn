@@ -3,8 +3,7 @@ name: Check Changelog
 # when a PR introduces a change in a test file.
 # To bypass this check, label the PR with "No Changelog Needed".
 on:
-  pull_request:
-    types: [opened, edited, labeled, unlabeled, synchronize]
+  workflow_dispatch:
 
 jobs:
   check:

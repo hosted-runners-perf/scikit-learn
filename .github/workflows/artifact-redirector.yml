@@ -1,4 +1,5 @@
-on: [status]
+on:
+  workflow_dispatch:
 jobs:
   circleci_artifacts_redirector_job:
     runs-on: ubuntu-latest

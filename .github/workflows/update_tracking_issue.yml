@@ -12,14 +12,7 @@
 
 name: "Update tracking issue"
 on:
-  workflow_call:
-    inputs:
-      job_status:
-        required: true
-        type: string
-    secrets:
-      BOT_GITHUB_TOKEN:
-        required: true
+  workflow_dispatch:
 
 jobs:
   update_tracking_issue:
