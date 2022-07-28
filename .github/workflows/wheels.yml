@@ -5,30 +5,11 @@ on:
   workflow_dispatch:
 
 jobs:
-  # Check whether to build the wheels and the source tarball
-  check_build_trigger:
-    name: Check build trigger
-    runs-on: ubuntu-22.04
-    outputs:
-      build: ${{ steps.check_build_trigger.outputs.build }}
-
-    steps:
-      - name: Checkout scikit-learn
-        uses: actions/checkout@v2
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-
-      - id: check_build_trigger
-        name: Check build trigger
-        run: bash build_tools/github/check_build_trigger.sh
-
   # Build the wheels for Linux, Windows and macOS for Python 3.8 and newer
   build_wheels:
     name: Build wheel for cp${{ matrix.python }}-${{ matrix.platform_id }}-${{ matrix.manylinux_image }}
     runs-on: ${{ matrix.os }}
-    needs: check_build_trigger
-    if: needs.check_build_trigger.outputs.build
-
+    
     strategy:
       # Ensure that a wheel builder finishes even if another fails
       fail-fast: false
@@ -147,9 +128,7 @@ jobs:
   build_sdist:
     name: Source distribution
     runs-on: ubuntu-22.04
-    needs: check_build_trigger
-    if: needs.check_build_trigger.outputs.build
-
+    
     steps:
       - name: Checkout scikit-learn
         uses: actions/checkout@v1
